@@ -10,8 +10,19 @@ class TCPClient {
     BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 
     // ASK FOR NAME HERE //////////////////////////////////
+    System.out.print("What is your name?: ");
+    String name = inFromUser.readLine();
 
     // ASK 'JOIN SERVER? (y/n)' ///////////////////////////
+    System.out.print("Join Server? (y/n): ");
+    String answer = inFromUser.readLine().toLowerCase();
+    while(!answer.equals("y")){
+      if(answer.toLowerCase().equals("n"))
+        return;
+      
+      System.out.print("Join Server? (y/n): ");
+      answer = inFromUser.readLine().toLowerCase();
+    }
 
     // Establish Connection
     Socket clientSocket = null;
@@ -42,6 +53,7 @@ class TCPClient {
     BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
     // SEND NAME HERE /////////////////////////////////////////
+    outToServer.writeBytes(name + '\n');
 
     // Send many Messages
     while (!(sentence.equalsIgnoreCase("QUIT"))) {
