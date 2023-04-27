@@ -7,13 +7,14 @@ import java.util.Stack;
 
 class TCPServer {
   public static void main(String argv[]) throws Exception {
-    // Create log.txt
+    // Create log.txt for logging
     new File("log.txt");
 
     ServerSocket welcomeSocket = null;
     Socket connectionSocket = null;
 
     try {
+        // Create a new ServerSocket that listens to port 6789 for incoming client connections.
       welcomeSocket = new ServerSocket(6789);
     } catch (IOException e) {
       e.printStackTrace();
@@ -22,6 +23,7 @@ class TCPServer {
     while (true) {
 
       try {
+          // Wait for a client to connect and accept the connection.
         connectionSocket = welcomeSocket.accept();
       } catch (IOException e) {
         e.printStackTrace();
@@ -46,6 +48,7 @@ class ClientThread extends Thread {
     Instant start = Instant.now();
 
     try {
+         // Create a BufferedReader and a DataOutputStream to communicate with the client.
       inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       outToClient = new DataOutputStream(socket.getOutputStream());
     } catch (IOException e) {
@@ -58,8 +61,9 @@ class ClientThread extends Thread {
 
     while (true) {
       try {
+        // Read a line of input from the client.
         clientSentence = inFromClient.readLine();
-
+           // Close the socket if the client disconnected or sent "QUIT" command.
         if ((clientSentence == null) || clientSentence.equalsIgnoreCase("QUIT")) {
           socket.close();
 
@@ -72,6 +76,7 @@ class ClientThread extends Thread {
           return;
         } 
         else if(name.isEmpty()){
+          // If this is the first line of input, assume it is the client's name and log the start of the session to log.txt.
           name = clientSentence;
           // LOG ENTRY TIME /////////////////////////////
           logStart(name, start);
@@ -94,6 +99,7 @@ class ClientThread extends Thread {
       }
     }
   }
+   // Log the start of a session to log.txt.
 
   public void logStart(String name, Instant start){
       try {
@@ -108,7 +114,7 @@ class ClientThread extends Thread {
         e.printStackTrace();
       }
   }
-
+ // Log the end of a session to log.txt.
   public void logEnd(String name, Instant start, Instant end){
     try {
       Duration timeElapsed = Duration.between(start, end);
@@ -128,11 +134,18 @@ class ClientThread extends Thread {
   public Double equationParser(String input) {
 
     try {
+      //input String into an array of Strings, using a space as the delimiter
       String[] equation = input.split(" ");
+      //operator_stack is a Stack that will be used to keep track of the operators as they are processed
       Stack<String> operator_stack = new Stack<String>();
+      //output_queue is a PriorityQueue that will be used to keep track of the operands as they are processed.
       PriorityQueue<Double> output_queue = new PriorityQueue<Double>();
 
       for (String item : equation) {
+        //checks if the current item is an operator 
+        //checks the precedence of item against the operator at top of  operator_stack. 
+         // If the current operator has higher precedence or same & left
+        // pops  top operator off  stack and performs  operation on  top two operands in output_queue
         if (item.matches("\\^|\\*|/|\\+|-")) {
           while ((!operator_stack.empty() && !operator_stack.peek().equals("("))
               && (isHigherPrecedence(item, operator_stack.peek())
@@ -144,10 +157,13 @@ class ClientThread extends Thread {
             output_queue.add(performOperation(op, num2, num1));
           }
           operator_stack.push(item);
-
+        //case where the current item is an open parenthesis.
+          // pushes the open parenthesis onto the operator_stack
         } else if (item.equals("(")) {
           operator_stack.push(item);
-
+          // case where the current item is a close parenthesis.
+          // pops operators off the operator_stack and performs operations on  top two operands in output_queue until it reaches the open parenthesis @ top of  operator_stack.
+         // Once it has processed all operators between the parentheses  pops the open parenthesis off the operator_stack.
         } else if (item.equals(")")) {
           while ((!operator_stack.peek().equals("("))) {
             if (!operator_stack.empty()) {
@@ -163,10 +179,12 @@ class ClientThread extends Thread {
 
           } else
             return null;
-
+        //if item is a #, add to output queue
         } else
           output_queue.add(Double.parseDouble(item));
       }
+      //after iterating over all items, the code pops the remaining operators and 
+      //evaluates them. Final results is the only item left in the queue.
 
       while (!operator_stack.empty()) {
         if (operator_stack.peek().equals("("))
@@ -183,7 +201,7 @@ class ClientThread extends Thread {
       return null;
     }
   }
-
+//helper method that evaluates two operands with the operator 
   public Double performOperation(String op, Double num1, Double num2) {
 
     if (op.equals("^"))
@@ -200,21 +218,21 @@ class ClientThread extends Thread {
     return -1.0;
 
   }
-
+//used to check if one operator has higher precedence than the other
   public boolean isHigherPrecedence(String op1, String op2) {
     if (getPrecedence(op1) > getPrecedence(op2))
       return true;
 
     return false;
   }
-
+//helper method that checks if 2 operators have same precedence and left-associativr
   public boolean samePrecedenceLeftAssociative(String op1, String op2) {
     if (getPrecedence(op1) == getPrecedence(op2) && op1.matches("/|\\^"))
       return true;
 
     return false;
   }
-
+//returns precedence of operator
   public int getPrecedence(String op) {
 
     if (op.equals(")"))
