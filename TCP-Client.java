@@ -6,6 +6,21 @@ class TCPClient {
   public static void main(String argv[]) throws Exception {
     String sentence = "";
     String modifiedSentence = "";
+
+    String ip = "";
+    int port = 6827;
+
+    if(argv.length != 2){
+      System.out.println("Bad arguments");
+      return;
+    }
+
+    try {
+      ip = argv[0];
+      port = Integer.parseInt(argv[1]);
+    } catch (Exception e) {
+      System.out.println("Bad port");
+    }
     //creating bufferedreader obj to read input from the user
     BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 
@@ -28,7 +43,7 @@ class TCPClient {
     Socket clientSocket = null;
     for (int i = 0; i < 3; i++) {
       try {
-        clientSocket = new Socket("127.0.0.1", 6789);
+        clientSocket = new Socket(ip, port);
         System.out.println("Connection established");
         break;
       } catch (Exception e) {

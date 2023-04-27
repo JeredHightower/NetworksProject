@@ -7,6 +7,19 @@ import java.util.Stack;
 
 class TCPServer {
   public static void main(String argv[]) throws Exception {
+
+    if(argv.length != 1){
+      System.out.println("Bad arguments");
+      return;
+    }
+
+    int port = 6827;
+    try {
+    port = Integer.parseInt(argv[0]);
+    } catch (Exception e) {
+      System.out.println("Bad port");
+    }
+    
     // Create log.txt for logging
     new File("log.txt");
 
@@ -15,7 +28,7 @@ class TCPServer {
 
     try {
         // Create a new ServerSocket that listens to port 6789 for incoming client connections.
-      welcomeSocket = new ServerSocket(6789);
+      welcomeSocket = new ServerSocket(port);
     } catch (IOException e) {
       e.printStackTrace();
     }
