@@ -6,7 +6,7 @@ class TCPClient {
   public static void main(String argv[]) throws Exception {
     String sentence = "";
     String modifiedSentence = "";
-
+    //creating bufferedreader obj to read input from the user
     BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 
     // ASK FOR NAME HERE //////////////////////////////////
@@ -24,7 +24,7 @@ class TCPClient {
       answer = inFromUser.readLine().toLowerCase();
     }
 
-    // Establish Connection
+    // Establish Connection with server 
     Socket clientSocket = null;
     for (int i = 0; i < 3; i++) {
       try {
@@ -33,6 +33,7 @@ class TCPClient {
         break;
       } catch (Exception e) {
         System.out.println("Connect failed, waiting and trying again");
+        //if connection fails, wait for 2 seconds and retry
         try {
           Thread.sleep(2000);// 2 seconds
         } catch (InterruptedException ie) {
@@ -46,7 +47,7 @@ class TCPClient {
       return;
     }
 
-    // Message Sent Stream
+    //creat dataoutputstream obj for Message Sent Stream
     DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
 
     // Message Received Stream
@@ -61,7 +62,7 @@ class TCPClient {
       sentence = inFromUser.readLine();
 
       outToServer.writeBytes(sentence + '\n');
-
+//if user types QUIT, messages stop being sent
       if (sentence.equalsIgnoreCase("QUIT"))
         break;
 
@@ -70,7 +71,7 @@ class TCPClient {
 
       System.out.println("FROM SERVER: " + modifiedSentence);
     }
-
+  //close connection 
     clientSocket.close();
 
   }
