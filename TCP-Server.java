@@ -124,7 +124,7 @@ class ClientThread extends Thread {
     }
   }
 
-  // NEED TO ADD EQUATION PARSER
+  // Shunting Algorithm
   public Double equationParser(String input) {
 
     try {
