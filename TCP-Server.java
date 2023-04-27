@@ -1,10 +1,15 @@
 import java.io.*;
 import java.net.*;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.PriorityQueue;
 import java.util.Stack;
 
 class TCPServer {
   public static void main(String argv[]) throws Exception {
+    // Create log.txt
+    new File("log.txt");
+
     ServerSocket welcomeSocket = null;
     Socket connectionSocket = null;
 
@@ -38,6 +43,7 @@ class ClientThread extends Thread {
   public void run() {
     BufferedReader inFromClient = null;
     DataOutputStream outToClient = null;
+    Instant start = Instant.now();
 
     try {
       inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -50,8 +56,6 @@ class ClientThread extends Thread {
     String reply;
     String name = "";
 
-    // LOG ENTRY TIME /////////////////////////////
-
     while (true) {
       try {
         clientSentence = inFromClient.readLine();
@@ -61,19 +65,23 @@ class ClientThread extends Thread {
 
           // LOG NAME AND TIME AND HOW LONG CONNECTED
           // ////////////////////////////////////////////////
-          // System.out.println(name);
+          Instant end = Instant.now();
+          logEnd(name, start, end);
+          System.out.println(start);
 
           return;
         } 
         else if(name.isEmpty()){
           name = clientSentence;
+          // LOG ENTRY TIME /////////////////////////////
+          logStart(name, start);
         }
         else {
           // CALL EQUATION PARSER
 
           Double ans = equationParser(clientSentence);
           if(ans == null)
-              reply = "Invalid Format for Equation, must have spaces, ex. 1 + ( 2 - 3 ) * 10 / 2 ^ 2";
+              reply = "Invalid Format for Equation, ex. 1 + ( 2 - 3 ) * 10 / 2 ^ 2";
           else
               reply = String.format("The answer is: %.2f", ans);
 
@@ -84,6 +92,35 @@ class ClientThread extends Thread {
         e.printStackTrace();
         return;
       }
+    }
+  }
+
+  public void logStart(String name, Instant start){
+      try {
+        String output = name + " login: " + start + "\n";
+
+        FileWriter writer = new FileWriter("log.txt", true);
+        writer.write(output);
+        writer.close();
+
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+  }
+
+  public void logEnd(String name, Instant start, Instant end){
+    try {
+      Duration timeElapsed = Duration.between(start, end);
+      String output = name + " logout: " + end + " Duration: " + timeElapsed.toSeconds() +"s\n";
+
+      FileWriter writer = new FileWriter("log.txt", true);
+      writer.write(output);
+      writer.close();
+
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 
