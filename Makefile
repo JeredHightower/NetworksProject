@@ -32,17 +32,16 @@ JC = javac
 #
 
 .java.class:
-        $(JC) $(JFLAGS) $*.java
+	$(JC) $(JFLAGS) $*.java
 
 
 #
-# CLASSES is a macro consisting of 2 words (one for each java source file, in this case
-it would be TCPclient and TCPServer)
+# CLASSES is a macro consisting of 2 words (one for each java source file, in this caseit would be TCPclient and TCPServer)
 #
 
 CLASSES = \
-        TCPClient.java \
-        TCPServer.java 
+	TCP-Client.java \
+	TCP-Server.java 
         
 
 
@@ -69,4 +68,4 @@ classes: $(CLASSES:.java=.class)
 #
 
 clean:
-        $(RM) *.class
+	$(RM) *.class
