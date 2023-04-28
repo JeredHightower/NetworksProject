@@ -77,14 +77,13 @@ class ClientThread extends Thread {
         // Read a line of input from the client.
         clientSentence = inFromClient.readLine();
            // Close the socket if the client disconnected or sent "QUIT" command.
-        if ((clientSentence == null) || clientSentence.equalsIgnoreCase("QUIT")) {
+        if ((clientSentence == "\n") || clientSentence.equalsIgnoreCase("QUIT")) {
           socket.close();
 
           // LOG NAME AND TIME AND HOW LONG CONNECTED
           // ////////////////////////////////////////////////
           Instant end = Instant.now();
           logEnd(name, start, end);
-          System.out.println(start);
 
           return;
         } 
