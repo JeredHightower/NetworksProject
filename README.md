@@ -37,6 +37,6 @@ Equations must be space delimited
 
 ### Quitting
 
-1. To exit the program, type "QUIT" and press Enter or just pressing Enter with no input.
+1. To exit the program, type "QUIT" and press Enter.
 2. The client will close the connection to the server and exit.
 3. The server will log the client's name, start time, end time, and duration of the session to a file named "log.txt".

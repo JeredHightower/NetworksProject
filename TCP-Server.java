@@ -33,6 +33,8 @@ class TCPServer {
       e.printStackTrace();
     }
 
+    System.out.println("Running...");
+
     while (true) {
 
       try {
@@ -53,6 +55,7 @@ class ClientThread extends Thread {
 
   public ClientThread(Socket clientSocket) {
     this.socket = clientSocket;
+    System.out.println("New connection established");
   }
 
   public void run() {
@@ -77,7 +80,7 @@ class ClientThread extends Thread {
         // Read a line of input from the client.
         clientSentence = inFromClient.readLine();
            // Close the socket if the client disconnected or sent "QUIT" command.
-        if ((clientSentence.isBlank()) || clientSentence.equalsIgnoreCase("QUIT")) {
+        if ((clientSentence == null) || clientSentence.equalsIgnoreCase("QUIT")) {
           socket.close();
 
           // LOG NAME AND TIME AND HOW LONG CONNECTED
