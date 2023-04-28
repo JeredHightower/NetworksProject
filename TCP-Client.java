@@ -75,7 +75,7 @@ class TCPClient {
     outToServer.writeBytes(name + '\n');
 
     // Send many Messages
-    while (!(sentence.equalsIgnoreCase("QUIT"))) {
+    while (!(sentence.equalsIgnoreCase("QUIT") || sentence.isEmpty())) {
       // Message to sent
       sentence = inFromUser.readLine();
 
