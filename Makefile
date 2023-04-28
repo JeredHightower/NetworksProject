@@ -41,7 +41,7 @@ it would be TCPclient and TCPServer)
 #
 
 CLASSES = \
-        TCPclient.java \
+        TCPClient.java \
         TCPServer.java 
         
 
