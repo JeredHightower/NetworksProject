@@ -28,6 +28,9 @@ class TCPClient {
     System.out.print("What is your name?: ");
     String name = inFromUser.readLine();
 
+    if(name.isBlank())
+      return;
+
     // ASK 'JOIN SERVER? (y/n)' ///////////////////////////
     System.out.print("Join Server? (y/n): ");
     String answer = inFromUser.readLine().toLowerCase();
