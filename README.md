@@ -3,7 +3,7 @@ This is a simple client-server application that allows a user to send equations 
 
 ## Installation
 
-1. Open the zip file and navigate to it's directory
+1. Open the zip file and navigate to its directory
 3. Run `make` to compile the java files.
 
 ## Usage
